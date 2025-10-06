@@ -17,7 +17,7 @@ class PtzResponse(Enum):
 
 class PtzControl:
     def __init__(
-        self, camera_user, camera_pass, camera_ip="192.168.1.64", camera_port=80
+        self, camera_user, camera_pass, camera_ip="192.168.3.64", camera_port=80
     ) -> None:
         self.absolute_endpoint = (
             f"http://{camera_ip}:{camera_port}/ISAPI/PTZCtrl/channels/1/absolute"
