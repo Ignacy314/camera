@@ -12,8 +12,9 @@ from gps import gps
 
 if __name__ == "__main__":
     # shape = (1440, 2560, 3)
-    shape = (1080, 1920, 3)
+    # shape = (1080, 1920, 3)
     # shape = (720, 1280, 3)
+    shape = (576, 704, 3)
     dtype = np.uint8
 
     in_shm = shared_memory.SharedMemory(
