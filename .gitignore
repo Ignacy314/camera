@@ -11,3 +11,6 @@ wheels/
 
 best.pt
 best_full_integer_quant_edgetpu.tflite
+
+pyproject.toml
+uv.lock
