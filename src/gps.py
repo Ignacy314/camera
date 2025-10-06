@@ -18,7 +18,7 @@ def gps(stop_flag, gps_lon, gps_lat, gps_lock):
             # _, msgs = nmr.read()
 
             for _, msg in nmr:
-                if msg.msgID == "GLL":
+                if msg.msgID == "GLL" and msg.lon is not None:
                     print(msg)
                     lons.append(float(msg.lon))
                     lats.append(float(msg.lat))
