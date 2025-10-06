@@ -42,7 +42,7 @@ def mpu(
         mode=AK8963_MODE_C100HZ,
     )
 
-    mpu.calibrate()
+    # mpu.calibrate()
     mpu.configure()
 
     filtered_angle = 0
