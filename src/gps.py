@@ -15,9 +15,9 @@ def gps(stop_flag, gps_lon, gps_lat, gps_lock):
             if stop_flag.value == 1:
                 break
 
-            _, msg = nmr.read()
+            # _, msgs = nmr.read()
 
-            if msg is not None:
+            for msg in nmr:
                 print(msg)
 
             # if msg is not None and msg.lon is not None:
