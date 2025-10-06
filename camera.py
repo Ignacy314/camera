@@ -1,4 +1,13 @@
 import math
+from mpu9250_jmdev.registers import (
+    AK8963_ADDRESS,
+    MPU9050_ADDRESS_68,
+    GFS_1000,
+    AFS_8G,
+    AK8963_BIT_16,
+    AK8963_MODE_C100HZ,
+)
+from mpu9250_jmdev.mpu_9250 import MPU9250
 import time
 import asyncio
 from ultralytics import YOLO

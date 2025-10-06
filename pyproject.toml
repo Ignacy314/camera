@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ipython>=9.5.0",
+    "mpu9250-jmdev>=1.0.12",
     "requests>=2.32.5",
     "ultralytics>=8.3.203",
     "websockets>=15.0.1",
