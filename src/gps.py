@@ -18,17 +18,20 @@ def gps(stop_flag, gps_lon, gps_lat, gps_lock):
             # _, msgs = nmr.read()
 
             for _, msg in nmr:
-                if msg.msgID == "GLL" and msg.lon is not None:
+                if msg.msgID == "GLL":
                     print(msg)
-                    lons.append(float(msg.lon))
-                    lats.append(float(msg.lat))
+                    try:
+                        lons.append(float(msg.lon))
+                        lats.append(float(msg.lat))
 
-                    lon = mean(lons)
-                    lat = mean(lats)
+                        lon = mean(lons)
+                        lat = mean(lats)
 
-                    with gps_lock:
-                        gps_lon.value = lon
-                        gps_lat.value = lat
+                        with gps_lock:
+                            gps_lon.value = lon
+                            gps_lat.value = lat
+                    except Exception:
+                        pass
 
             # if msg is not None and msg.lon is not None:
             #     lons.append(float(msg.lon))
