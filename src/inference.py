@@ -15,22 +15,23 @@ def inference(
     stop_flag,
     in_new_frame,
     out_new_frame,
-    coords_x,
-    coords_y,
+    coords_lon,
+    coords_lat,
     coords_new,
+    coords_timer,
     coords_lock,
     gps_lon,
     gps_lat,
-    gps_new,
+    # gps_new,
     gps_lock,
-    mag_north,
-    mag_new,
-    mag_lock,
+    mag_angle,
+    # mag_new,
+    # mag_lock,
     cmd_q,
 ):
     # yolo export model=yolo11n.pt format=openvino int8=True data=coco128.yaml nms=True
-    model = YOLO("best.pt")
-    # model = YOLO("best_full_integer_quant_edgetpu.tflite")
+    # model = YOLO("best.pt")
+    model = YOLO("best_full_integer_quant_edgetpu.tflite")
 
     in_shm = shared_memory.SharedMemory(name=in_shm_name)
     frame_array = np.ndarray(shape, dtype=dtype, buffer=in_shm.buf)
@@ -38,17 +39,18 @@ def inference(
     plot_array = np.ndarray(shape, dtype=dtype, buffer=out_shm.buf)
 
     tracker = Tracker(
-        coords_x,
-        coords_y,
+        coords_lon,
+        coords_lat,
         coords_new,
+        coords_timer,
         coords_lock,
         gps_lon,
         gps_lat,
-        gps_new,
+        # gps_new,
         gps_lock,
-        mag_north,
-        mag_new,
-        mag_lock,
+        mag_angle,
+        # mag_new,
+        # mag_lock,
         cmd_q,
     )
 

@@ -24,14 +24,15 @@ class Tracker:
         coords_lon,
         coords_lat,
         coords_new,
+        coords_timer,
         coords_lock,
         gps_lon,
         gps_lat,
-        gps_new,
+        # gps_new,
         gps_lock,
-        mag_north,
-        mag_new,
-        mag_lock,
+        mag_angle,
+        # mag_new,
+        # mag_lock,
         cmd_q,
     ) -> None:
         self.last_track = timer()
@@ -44,24 +45,24 @@ class Tracker:
         self.coords_lon = coords_lon
         self.coords_lat = coords_lat
         self.coords_new = coords_new
+        self.coords_timer = coords_timer
         self.coords_lock = coords_lock
-        self.coords_timer = timer()
 
         self.gps_lon = gps_lon
         self.gps_lat = gps_lat
-        self.gps_new = gps_new
+        # self.gps_new = gps_new
         self.gps_lock = gps_lock
-        self.gps_lons = deque(maxlen=20)
-        self.gps_lats = deque(maxlen=20)
-        self.lon = 0.0
-        self.lat = 0.0
+        # self.gps_lons = deque(maxlen=20)
+        # self.gps_lats = deque(maxlen=20)
+        # self.lon = 0.0
+        # self.lat = 0.0
 
-        self.north_angle = 0.0
+        # self.north_angle = 0.0
         self.device_angle = 0.0
-        self.mag_angles = deque(maxlen=20)
-        self.mag_angle = mag_north
-        self.mag_new = mag_new
-        self.mag_lock = mag_lock
+        # self.mag_angles = deque(maxlen=20)
+        self.mag_angle = mag_angle
+        # self.mag_new = mag_new
+        # self.mag_lock = mag_lock
 
         self.patrolling = False
         self.patrol_start = None
@@ -106,22 +107,25 @@ class Tracker:
         else:
             self.locked = None
 
-    def process_gps_and_mag(self):
-        with self.gps_lock:
-            if self.gps_new.value == 1:
-                self.gps_new.value = 0
-                self.gps_lons.append(self.gps_lon.value)
-                self.gps_lats.append(self.gps_lat.value)
-                self.lon = mean(self.gps_lons)
-                self.lat = mean(self.gps_lats)
+    # def process_gps_and_mag(self):
+    #     with self.gps_lock:
+    #         if self.gps_new.value == 1:
+    #             self.gps_new.value = 0
+    #             self.gps_lons.append(self.gps_lon.value)
+    #             self.gps_lats.append(self.gps_lat.value)
+    #             self.lon = mean(self.gps_lons)
+    #             self.lat = mean(self.gps_lats)
 
-        with self.mag_lock:
-            if self.mag_new.value == 1:
-                self.mag_new.value = 0
-                self.mag_angles.append(self.mag_angle.value)
-                self.north_angle = (
-                    self.device_angle - mean(self.mag_angles) - 90
-                ) % 360
+    # with self.mag_lock:
+    #     if self.mag_new.value == 1:
+    #         self.mag_new.value = 0
+    #         self.mag_angles.append(self.mag_angle.value)
+    #         self.north_angle = (
+    #             self.device_angle - mean(self.mag_angles) - 90
+    #         ) % 360
+
+    def angle_offset(self):
+        return self.device_angle - self.mag_angle.value - 90
 
     def track(self):
         time = timer()
@@ -171,22 +175,22 @@ class Tracker:
 
             return
 
-        if time - self.last_lock < 0.5:
+        if time - self.last_lock < 1.0:
             return
 
         with self.coords_lock:
-            if self.coords_new.value == 1:
+            if self.coords_new.value == 1 and time - self.coords_timer < 2.0:
                 self.patrol_start = None
                 self.coords_new.value = 0
                 self.coords_timer = time
                 self.move_to_coords(self.coords_lon.value, self.coords_lat.value)
                 return
 
-        if time - self.coords_timer < 2.0:
-            self.patrol_start = None
-            # not locked on and there was recently a coordinate to target
-            # so don't start patrolling for a time
-            return
+            if time - self.coords_timer < 2.0:
+                self.patrol_start = None
+                # not locked on and there was recently a coordinate to target
+                # so don't start patrolling for a time
+                return
 
         if self.patrol_start is None:
             # self.patrolling = False
@@ -209,7 +213,7 @@ class Tracker:
         return
 
     def move_to_coords(self, lon, lat):
-        (radius, angle_rad) = cart2pol(lon - self.lon, lat - self.lat)
-        angle_deg = (math.degrees(angle_rad) + self.north_angle) % 360
+        (radius, angle_rad) = cart2pol(lon - self.gps_lon, lat - self.gps_lat)
+        angle_deg = (math.degrees(angle_rad) + self.angle_offset()) % 360
         # TODO: tilt based on distance?
         self.cmd_q.put(f"a a {angle_deg} 0 1")

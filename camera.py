@@ -334,7 +334,8 @@ async def display(shm_name, shape, dtype, lock, stop_flag, new_frame):
     plot_array = np.ndarray(shape, dtype=dtype, buffer=shm.buf)
     last_frame = timer()
 
-    uri = "ws://localhost:8080/andros/sender"
+    uri = "ws://10.66.66.3:8080/andros/sender"
+    # uri = "ws://localhost:8080/andros/sender"
     while True:
         if stop_flag.value == 1:
             break
