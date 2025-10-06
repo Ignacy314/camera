@@ -17,7 +17,7 @@ def gps(stop_flag, gps_lon, gps_lat, gps_lock):
 
             for _, msg in nmr:
                 if msg.msgID == "GGA":
-                    print(msg)
+                    # print(msg)
                     try:
                         lons.append(float(msg.lon))
                         lats.append(float(msg.lat))

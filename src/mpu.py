@@ -45,7 +45,7 @@ def mpu(
     # print(mpu.checkAKDataReady())
     # print(mpu.checkMPUDataReady())
 
-    # mpu.calibrate()
+    mpu.calibrate()
     mpu.configure()
 
     filtered_angle = 0
@@ -56,14 +56,14 @@ def mpu(
 
         mag = mpu.readMagnetometerMaster()
         acc = mpu.readAccelerometerMaster()
-        print("Mag", mag)
-        print("Acc", acc)
+        # print("Mag", mag)
+        # print("Acc", acc)
 
         new_angle = calculate_angle(mag, acc)
-        print("Angle", new_angle)
+        # print("Angle", new_angle)
 
         filtered_angle = OLD * filtered_angle + (1 - OLD) * new_angle
-        print("Filtered angle", filtered_angle)
+        # print("Filtered angle", filtered_angle)
 
         with mag_lock:
             mag_new.value = 1
