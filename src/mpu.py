@@ -42,6 +42,9 @@ def mpu(
         mode=AK8963_MODE_C100HZ,
     )
 
+    print(mpu.checkAKDataReady())
+    print(mpu.checkMPUDataReady())
+
     # mpu.calibrate()
     mpu.configure()
 
