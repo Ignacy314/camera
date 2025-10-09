@@ -34,7 +34,7 @@ async def _handler(
             time.sleep(0.25)
 
 
-def coords_recv(
+async def _coords_recv(
     stop_flag,
     coords_lon,
     coords_lat,
@@ -58,3 +58,23 @@ def coords_recv(
         start_server = serve(handler, "10.66.66.101", 3013)
         asyncio.get_event_loop().run_until_complete(start_server)
         time.sleep(0.25)
+
+
+def coords_recv(
+    stop_flag,
+    coords_lon,
+    coords_lat,
+    coords_new,
+    coords_timer,
+    coords_lock,
+):
+    asyncio.run(
+        _coords_recv(
+            stop_flag,
+            coords_lon,
+            coords_lat,
+            coords_new,
+            coords_timer,
+            coords_lock,
+        )
+    )
