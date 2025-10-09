@@ -25,13 +25,19 @@ class PtzControl:
         self.continuous_endpoint = (
             f"http://{camera_ip}:{camera_port}/ISAPI/PTZCtrl/channels/1/continuous"
         )
+        self.home_endpoint = (
+            f"http://{camera_ip}:{camera_port}/ISAPI/PTZCtrl/channels/1/homePosition"
+        )
         self.auth = HTTPDigestAuth(camera_user, camera_pass)
 
-    def send_xml(self, xml_data, endpoint):
-        headers = {"Content-Type": "application/xml"}
+    def send_xml(self, xml_data, endpoint, request=requests.put):
+        if xml_data is not None:
+            headers = {"Content-Type": "application/xml"}
+        else:
+            headers = {}
 
         try:
-            response = requests.put(
+            response = request(
                 endpoint, headers=headers, data=xml_data, auth=self.auth, timeout=0.25
             )
 
@@ -112,3 +118,12 @@ class PtzControl:
 """
 
         return self.send_xml(xml_payload, self.continuous_endpoint)
+
+    def set_home(self):
+        return self.send_xml(None, self.home_endpoint)
+
+    def go_home(self):
+        return self.send_xml(None, f"{self.home_endpoint}/goto")
+
+    def clear_home(self):
+        return self.send_xml(None, self.home_endpoint, requests.delete)
