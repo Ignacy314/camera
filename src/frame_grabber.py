@@ -26,11 +26,11 @@ def frame_grabber(shm_name, shape, dtype, lock, stop_flag, new_frame):
         if not ret:
             continue
 
-        out.write(frame)
-
         with lock:
             np.copyto(frame_array, frame[::-1, ::-1])
             new_frame.value = 1
+
+        out.write(frame)
 
     cap.release()
     out.release()
