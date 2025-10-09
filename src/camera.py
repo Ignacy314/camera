@@ -3,6 +3,7 @@ import multiprocessing
 from multiprocessing import shared_memory, Lock, Value
 from timeit import default_timer as timer
 
+from coords_recv import coords_recv
 from frame_grabber import frame_grabber
 from inference import inference
 from display import display
@@ -91,9 +92,20 @@ if __name__ == "__main__":
     p6 = multiprocessing.Process(
         target=gps, args=(stop_flag, gps_lon, gps_lat, gps_lock)
     )
+    p7 = multiprocessing.Process(
+        target=coords_recv,
+        args=(
+            stop_flag,
+            coords_lon,
+            coords_lat,
+            coords_new,
+            coords_timer,
+            coords_lock,
+        ),
+    )
 
     try:
-        for p in (p1, p2, p3, p4, p5, p6):
+        for p in (p1, p2, p3, p4, p5, p6, p7):
             p.start()
 
         while True:
@@ -104,7 +116,7 @@ if __name__ == "__main__":
             else:
                 cmd_q.put(cmd)
 
-        for p in (p1, p2, p3, p4, p5, p6):
+        for p in (p1, p2, p3, p4, p5, p6, p7):
             p.join()
     finally:
         for shm in (in_shm, out_shm):
