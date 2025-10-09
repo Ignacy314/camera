@@ -195,8 +195,8 @@ class Tracker:
         if self.patrol_start is None:
             # self.patrolling = False
             self.patrol_start = time
-            # self.cmd_q.put("a a 0 30 1")
-            self.cmd_q.put("a c -34 100 -100")
+            self.cmd_q.put("a a 0 35 1")
+            # self.cmd_q.put("a c -34 100 -100")
             return
 
         if time - self.patrol_start < 2.0:
