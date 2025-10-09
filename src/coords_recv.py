@@ -55,6 +55,6 @@ def coords_recv(
     while True:
         if stop_flag.value == 1:
             break
-        start_server = serve(handler, "127.0.0.1", 3013)
+        start_server = serve(handler, "10.66.66.101", 3013)
         asyncio.get_event_loop().run_until_complete(start_server)
         time.sleep(0.25)
