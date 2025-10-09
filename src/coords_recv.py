@@ -1,5 +1,4 @@
 import asyncio
-import websockets
 from websockets.asyncio.server import serve
 import functools
 import time
