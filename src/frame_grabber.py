@@ -16,7 +16,7 @@ def frame_grabber(shm_name, shape, dtype, lock, stop_flag, new_frame):
 
     fps = cap.get(cv2.CAP_PROP_FPS)  # Frames per second
     fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec
-    out = cv2.VideoWriter("~/output.avi", fourcc, fps, (frame_width, frame_height))
+    out = cv2.VideoWriter("../output.avi", fourcc, fps, (frame_width, frame_height))
 
     while True:
         if stop_flag.value == 1:
