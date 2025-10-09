@@ -45,7 +45,7 @@ def mpu(
     # print(mpu.checkAKDataReady())
     # print(mpu.checkMPUDataReady())
 
-    mpu.calibrate()
+    # mpu.calibrate()
     mpu.configure()
 
     filtered_angle = 0
